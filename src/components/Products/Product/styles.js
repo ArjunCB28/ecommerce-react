@@ -3,7 +3,7 @@ import { FullscreenExit } from '@material-ui/icons';
 
 export default makeStyles(() => ({
     root: {
-        flexGrow: 1
+        flexGrow: 1,
     },
     media: {
         height: 0,
