@@ -1,22 +1,25 @@
 import React from 'react'
 import { Typography, List, ListItem, ListItemText, Button } from '@material-ui/core';
 
-const Review = ({ checkoutToken, nextStep, backStep, shippingData, onCaptureCheckout }) => {
+const Review = ({ checkoutToken, nextStep, backStep, shippingData, onCaptureCheckout, shippingMethod }) => {
 
     const placeOrder = () => {
         const orderData = {
             line_items: checkoutToken.live.line_items,
             customer: { firstname: shippingData.firstName, lastname: shippingData.lastName, email: shippingData.email },
             shipping: { name: 'International', street: shippingData.address1, town_city: shippingData.city, county_state: 'ON', postal_zip_code: shippingData.zip, country: 'CA' },
-            fulfillment: { shipping_method: shippingData.shippingOption },
+            fulfillment: { shipping_method: shippingMethod[0]?.id },
             payment: {
-              gateway: 'CaseOnDelivery',
-              stripe: {
-                payment_method_id: 10001,
-              }
+                gateway: 'test_gateway',
+                card: {
+                  number: '4242424242424242',
+                  expiry_month: '02',
+                  expiry_year: '24',
+                  cvc: '123',
+                  postal_zip_code: '94107',
+                }
             }
           }
-    
         onCaptureCheckout(checkoutToken.id, orderData)
         nextStep()
     }

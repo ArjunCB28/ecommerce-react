@@ -3,12 +3,20 @@ import { Products, Navbar, Cart, Checkout } from './components'
 import { commerce } from './lib/commerce'
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 
+import { useSelector, useDispatch } from 'react-redux'
+import { initCart } from './store/cart.store'
+
 const App = () => {
   const [products, setProducts] = useState([])
   const [cart, setCart] = useState({})
   const [order, setOrder] = useState({})
   const [errorMessage, setErrorMessage] = useState('')
-  // get the products fromm the products api
+  const [shippingMethods, setShippingMethods] = useState({})
+
+  const cartFromStore = useSelector((state) => state.cart.value)
+  const dispatch = useDispatch()
+
+  // get the products from the products api
   const fetchProducts = async () => {
     const { data } = await commerce.products.list()
     setProducts(data)
@@ -19,6 +27,7 @@ const App = () => {
     const response = await commerce.cart.retrieve()
     console.log('app.js fetchCart response', response)
     setCart(response)
+    // dispatch(initCart(response))
   }
 
   // add products to the cart.
@@ -65,7 +74,6 @@ const App = () => {
   useEffect(() => {
     fetchProducts()
     fetchCart()
-    // emptyCart()
   }, [])
   
   return (

@@ -14,6 +14,7 @@ const Checkout = ({ cart, order, onCaptureCheckout, error }) => {
     const [activeStep, setActiveStep] = useState(0)
     const [checkoutToken, setCheckoutToken] = useState(null)
     const [shippingData, setShippingData] = useState({})
+    const [shippingMethod, setShippingMethod] = useState([])
     const nextStep = () => setActiveStep((prevActiveStep) => prevActiveStep + 1)
     const backStep = () => setActiveStep((prevActiveStep) => prevActiveStep - 1)
 
@@ -54,8 +55,10 @@ const Checkout = ({ cart, order, onCaptureCheckout, error }) => {
         const generateToken = async () => {
             try {
                 const token = await commerce.checkout.generateToken(cart.id, { type: 'cart' })
-                console.log('token', token)
+                const method = await commerce.checkout.getShippingOptions(token.id, { country: 'CA', region: 'ON' })
                 setCheckoutToken(token)
+                setShippingMethod(method)
+                console.log('token, method ', token, method)
             }
             catch (error) {
                 console.log('error', error)
@@ -76,7 +79,7 @@ const Checkout = ({ cart, order, onCaptureCheckout, error }) => {
                             </Step>
                         ))}
                     </Stepper>
-                    {activeStep === 2 ? <Confirmation/> : activeStep === 0 ? <AddressForm next={next}/> : <Review checkoutToken={checkoutToken} nextStep={nextStep} backStep={backStep} shippingData={shippingData} onCaptureCheckout={onCaptureCheckout}/>}
+                    {activeStep === 2 ? <Confirmation/> : activeStep === 0 ? <AddressForm next={next}/> : <Review checkoutToken={checkoutToken} nextStep={nextStep} backStep={backStep} shippingData={shippingData} onCaptureCheckout={onCaptureCheckout} shippingMethod={shippingMethod}/>}
                 </Paper>
             </main>
         </div>
