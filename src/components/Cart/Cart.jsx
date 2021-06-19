@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 
 const Cart = ({ cart, updateProductQtyInCart, removeProductFromCart, emptyCart }) => {
     const classes = useStyles()
-    console.log('classes.cartDetails', classes.cartDetails)
+    console.log('cart cart.jsx', cart)
     const isCartEmpty = !cart?.line_items?.length
     const EmptyCart = () => (
         <Typography variant="subtitle1">Cart is empty</Typography>
