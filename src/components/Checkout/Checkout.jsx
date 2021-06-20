@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { Paper, Stepper, Step, StepLabel, Typography, CircularProgress, Divider, Button } from '@material-ui/core'
 import useStyles from './styles'
-import { Link } from 'react-router-dom'
 
 import Review from './Review'
 import AddressForm from './AddressForm'
+import Confirmation from './Confirmation'
 import { commerce } from '../../lib/commerce'
 
 const Checkout = ({ cart, order, onCaptureCheckout, error }) => {
@@ -24,31 +24,31 @@ const Checkout = ({ cart, order, onCaptureCheckout, error }) => {
         nextStep()
     }
 
-    let Confirmation = () => (order.customer ? (
-        <>
-          <div>
-            <Typography variant="h5">Thank you for your purchase, {order.customer.firstname} {order.customer.lastname}!</Typography>
-            <Divider className={classes.divider} />
-            <Typography variant="subtitle2">Order ref: {order.customer_reference}</Typography>
-          </div>
-          <br />
-          <Button component={Link} variant="outlined" type="button" to="/">Back to home</Button>
-        </>
-      ) : (
-        <div className={classes.spinner}>
-          <CircularProgress />
-        </div>
-      ))
+    // let Confirmation = () => (order.customer ? (
+    //     <>
+    //       <div>
+    //         <Typography variant="h5">Thank you for your purchase, {order.customer.firstname} {order.customer.lastname}!</Typography>
+    //         <Divider className={classes.divider} />
+    //         <Typography variant="subtitle2">Order ref: {order.customer_reference}</Typography>
+    //       </div>
+    //       <br />
+    //       <Button component={Link} variant="outlined" type="button" to="/">Back to home</Button>
+    //     </>
+    //   ) : (
+    //     <div className={classes.spinner}>
+    //       <CircularProgress />
+    //     </div>
+    //   ))
     
-      if (error) {
-        Confirmation = () => (
-          <>
-            <Typography variant="h5">Error: {error}</Typography>
-            <br />
-            <Button component={Link} variant="outlined" type="button" to="/">Back to home</Button>
-          </>
-        )
-      }
+    //   if (error) {
+    //     Confirmation = () => (
+    //       <>
+    //         <Typography variant="h5">Error: {error}</Typography>
+    //         <br />
+    //         <Button component={Link} variant="outlined" type="button" to="/">Back to home</Button>
+    //       </>
+    //     )
+    //   }
 
     useEffect(() => {
         console.log('cart', cart)
@@ -65,7 +65,7 @@ const Checkout = ({ cart, order, onCaptureCheckout, error }) => {
             }
         }
         generateToken()
-    }, [cart])
+    }, [])
 
     return (
         <div className={classes.toolbar}>
@@ -79,7 +79,7 @@ const Checkout = ({ cart, order, onCaptureCheckout, error }) => {
                             </Step>
                         ))}
                     </Stepper>
-                    {activeStep === 2 ? <Confirmation/> : activeStep === 0 ? <AddressForm next={next}/> : <Review checkoutToken={checkoutToken} nextStep={nextStep} backStep={backStep} shippingData={shippingData} onCaptureCheckout={onCaptureCheckout} shippingMethod={shippingMethod}/>}
+                    {activeStep === 2 ? <Confirmation order={order} error={error}/> : activeStep === 0 ? <AddressForm next={next}/> : <Review checkoutToken={checkoutToken} nextStep={nextStep} backStep={backStep} shippingData={shippingData} onCaptureCheckout={onCaptureCheckout} shippingMethod={shippingMethod}/>}
                 </Paper>
             </main>
         </div>

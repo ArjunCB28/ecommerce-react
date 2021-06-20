@@ -62,6 +62,7 @@ const App = () => {
   }
 
   const handleCaptureCheckout = async (checkoutTokenId, newOrder) => {
+    if (newOrder === undefined) return
     try {
       const incomingOrder = await commerce.checkout.capture(checkoutTokenId, newOrder)
       setOrder(incomingOrder)
