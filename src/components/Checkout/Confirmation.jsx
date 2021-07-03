@@ -3,7 +3,7 @@ import { Typography, CircularProgress, Divider, Button } from '@material-ui/core
 import { Link } from 'react-router-dom'
 import useStyles from './styles'
 
-const Confirmation = ({ order, error }) => {
+const Confirmation = ({ order }) => {
     const classes = useStyles()
     return (
         <>
@@ -16,14 +16,7 @@ const Confirmation = ({ order, error }) => {
                 </div>
                 <br />
                 <Button component={Link} variant="outlined" type="button" to="/">Back to home</Button>
-            </>): error ? (
-                <>
-                    <Typography variant="h5">Error: {error}</Typography>
-                    <br />
-                    <Button component={Link} variant="outlined" type="button" to="/">Back to home</Button>
-                </>
-            ) :
-            (
+            </>): (
                 <div className={classes.spinner}>
                   <CircularProgress />
                 </div>

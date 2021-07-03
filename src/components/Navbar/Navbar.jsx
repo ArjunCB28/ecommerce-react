@@ -1,13 +1,21 @@
 import React from 'react'
-import{ AppBar, Toolbar, IconButton, Badge, MenuItem, Menu, Typography } from '@material-ui/core'
+import{ AppBar, Toolbar, IconButton, Badge, Typography } from '@material-ui/core'
 import { ShoppingCart } from '@material-ui/icons'
 import { Link, useLocation } from 'react-router-dom'
 import ReactImage from '../../assets/ReactImage.png'
 import useStyles  from './styles'
+import { connect } from 'react-redux'
+
+const mapStateToProps = (state) => {
+    return {
+        totalItems: state?.cart?.total_items
+    }
+}
 
 const Navbar = ({ totalItems }) => {
     const classes = useStyles()
     const location = useLocation()
+
     return (
         <>
             <AppBar position="fixed" className={classes.appBar} color="inherit">
@@ -32,4 +40,4 @@ const Navbar = ({ totalItems }) => {
     )
 }
 
-export default Navbar
+export default connect(mapStateToProps)(Navbar)
