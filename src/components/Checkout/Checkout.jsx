@@ -1,14 +1,22 @@
 import React, { useState, useEffect } from 'react'
-import { Paper, Stepper, Step, StepLabel, Typography, CircularProgress, Divider, Button } from '@material-ui/core'
+import { Paper, Stepper, Step, StepLabel, Typography } from '@material-ui/core'
 import useStyles from './styles'
 
 import Review from './Review'
 import AddressForm from './AddressForm'
 import Confirmation from './Confirmation'
 import { commerce } from '../../lib/commerce'
+import { connect } from 'react-redux'
+import { CaptureCheckout } from '../../utils/cartServices'
 
-const Checkout = ({ cart, order, onCaptureCheckout, error }) => {
-    console.log('cart Checkout', cart)
+const mapStateToProps = (state) => {
+    return {
+        cart: state?.cart,
+        order: state?.order
+    }
+}
+
+const Checkout = ({ cart, order }) => {
     const classes = useStyles()
     const steps = ['Shipping address', 'Review']
     const [activeStep, setActiveStep] = useState(0)
@@ -24,41 +32,13 @@ const Checkout = ({ cart, order, onCaptureCheckout, error }) => {
         nextStep()
     }
 
-    // let Confirmation = () => (order.customer ? (
-    //     <>
-    //       <div>
-    //         <Typography variant="h5">Thank you for your purchase, {order.customer.firstname} {order.customer.lastname}!</Typography>
-    //         <Divider className={classes.divider} />
-    //         <Typography variant="subtitle2">Order ref: {order.customer_reference}</Typography>
-    //       </div>
-    //       <br />
-    //       <Button component={Link} variant="outlined" type="button" to="/">Back to home</Button>
-    //     </>
-    //   ) : (
-    //     <div className={classes.spinner}>
-    //       <CircularProgress />
-    //     </div>
-    //   ))
-    
-    //   if (error) {
-    //     Confirmation = () => (
-    //       <>
-    //         <Typography variant="h5">Error: {error}</Typography>
-    //         <br />
-    //         <Button component={Link} variant="outlined" type="button" to="/">Back to home</Button>
-    //       </>
-    //     )
-    //   }
-
     useEffect(() => {
-        console.log('cart', cart)
         const generateToken = async () => {
             try {
-                const token = await commerce.checkout.generateToken(cart.id, { type: 'cart' })
+                const token = await commerce.checkout.generateToken(cart?.id, { type: 'cart' })
                 const method = await commerce.checkout.getShippingOptions(token.id, { country: 'CA', region: 'ON' })
                 setCheckoutToken(token)
                 setShippingMethod(method)
-                console.log('token, method ', token, method)
             }
             catch (error) {
                 console.log('error', error)
@@ -79,11 +59,12 @@ const Checkout = ({ cart, order, onCaptureCheckout, error }) => {
                             </Step>
                         ))}
                     </Stepper>
-                    {activeStep === 2 ? <Confirmation order={order} error={error}/> : activeStep === 0 ? <AddressForm next={next}/> : <Review checkoutToken={checkoutToken} nextStep={nextStep} backStep={backStep} shippingData={shippingData} onCaptureCheckout={onCaptureCheckout} shippingMethod={shippingMethod}/>}
+                    {activeStep === 2 ? <Confirmation order={order}/> : activeStep === 0 ? <AddressForm next={next}/> : <Review checkoutToken={checkoutToken} nextStep={nextStep} backStep={backStep} shippingData={shippingData} onCaptureCheckout={CaptureCheckout} shippingMethod={shippingMethod}/>}
                 </Paper>
             </main>
         </div>
     )
 }
 
-export default Checkout
+export default connect(mapStateToProps)(Checkout)
+
