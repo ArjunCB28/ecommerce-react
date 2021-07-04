@@ -7,7 +7,7 @@ const Confirmation = ({ order }) => {
     const classes = useStyles()
     return (
         <>
-            { order.customer ?
+            { order?.customer ?
             (<>
                 <div>
                     <Typography variant="h5">Thank you for your purchase, {order.customer.firstname} {order.customer.lastname}!</Typography>
